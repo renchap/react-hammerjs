@@ -1,5 +1,6 @@
-React-HammerJS
+rc-hammerjs
 ==============
+Fork from [React-HammerJS](https://github.com/JedWatson/react-hammerjs).
 
 [ReactJS](http://facebook.github.io/react/) / [HammerJS](http://hammerjs.github.io) integration. Support touch events in your React app.
 

@@ -1,11 +1,12 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 
-// require('hammerjs') when in a browser. This is safe because Hammer is only
-// invoked in componentDidMount, which is not executed on the server.
-var Hammer = (typeof window !== 'undefined') ? require('hammerjs') : undefined;
+// https://github.com/hammerjs/hammer.js/issues/930
+// https://github.com/JedWatson/react-hammerjs/issues/14
+// wait to see if we need the condition require hack for ssr
+import Hammer from 'hammerjs';
 
-var privateProps = {
+const privateProps = {
 	children: true,
 	direction: true,
 	options: true,
@@ -18,7 +19,7 @@ var privateProps = {
  * ================
  */
 
-var handlerToEvent = {
+const handlerToEvent = {
 	action: 'tap press',
 	onDoubleTap: 'doubletap',
 	onPan: 'pan',
@@ -42,7 +43,7 @@ var handlerToEvent = {
 	onTap: 'tap',
 };
 
-Object.keys(handlerToEvent).forEach(function (i) {
+Object.keys(handlerToEvent).forEach(i => {
 	privateProps[i] = true;
 });
 
@@ -51,7 +52,7 @@ function updateHammer (hammer, props) {
 		console.warn('vertical is deprecated, please use `direction` instead');
 	}
 
-	var directionProp = props.direction;
+	const directionProp = props.direction;
 	if (directionProp || props.hasOwnProperty('vertical')) {
 		direction = directionProp ? directionProp : (props.vertical ? 'DIRECTION_ALL' : 'DIRECTION_HORIZONTAL');
 		hammer.get('pan').set({ direction: Hammer[direction] });
@@ -59,15 +60,15 @@ function updateHammer (hammer, props) {
 	}
 
 	if (props.options) {
-		Object.keys(props.options).forEach(function (option) {
+		Object.keys(props.options).forEach(option => {
 			if (option === 'recognizers') {
-				Object.keys(props.options.recognizers).forEach(function (gesture) {
-					var recognizer = hammer.get(gesture);
+				Object.keys(props.options.recognizers).forEach(gesture => {
+					const recognizer = hammer.get(gesture);
 					recognizer.set(props.options.recognizers[gesture]);
 				}, this);
 			} else {
-				var key = option;
-				var optionObj = {};
+				const key = option;
+				const optionObj = {};
 				optionObj[key] = props.options[option];
 				hammer.set(optionObj);
 			}
@@ -75,14 +76,14 @@ function updateHammer (hammer, props) {
 	}
 
 	if (props.recognizeWith) {
-		Object.keys(props.recognizeWith).forEach(function (gesture) {
-			var recognizer = hammer.get(gesture);
+		Object.keys(props.recognizeWith).forEach(gesture => {
+			const recognizer = hammer.get(gesture);
 			recognizer.recognizeWith(props.recognizeWith[gesture]);
 		}, this);
 	}
 
-	Object.keys(props).forEach(function (p) {
-		var e = handlerToEvent[p];
+	Object.keys(props).forEach(p => {
+		const e = handlerToEvent[p];
 		if (e) {
 			hammer.off(e);
 			hammer.on(e, props[p]);
@@ -94,41 +95,41 @@ export default class HammerComponent extends React.Component {
     static displayName = 'Hammer';
 
     static propTypes = {
-		className: PropTypes.string,
-	};
+			className: PropTypes.string,
+		};
 
     componentDidMount() {
-		this.hammer = new Hammer(ReactDOM.findDOMNode(this));
-		updateHammer(this.hammer, this.props);
-	}
-
-    componentDidUpdate() {
-		if (this.hammer) {
+			this.hammer = new Hammer(ReactDOM.findDOMNode(this));
 			updateHammer(this.hammer, this.props);
 		}
-	}
+
+    componentDidUpdate() {
+			if (this.hammer) {
+				updateHammer(this.hammer, this.props);
+			}
+		}
 
     componentWillUnmount() {
-		if (this.hammer) {
-			this.hammer.stop();
-			this.hammer.destroy();
+			if (this.hammer) {
+				this.hammer.stop();
+				this.hammer.destroy();
+			}
+			this.hammer = null;
 		}
-		this.hammer = null;
-	}
 
     render() {
-		var props = {};
+			var props = {};
 
-		Object.keys(this.props).forEach(function (i) {
-			if (!privateProps[i]) {
-				props[i] = this.props[i];
-			}
-		}, this);
+			Object.keys(this.props).forEach(function (i) {
+				if (!privateProps[i]) {
+					props[i] = this.props[i];
+				}
+			}, this);
 
-		// Reuse the child provided
-		// This makes it flexible to use whatever element is wanted (div, ul, etc)
-		return React.cloneElement(React.Children.only(this.props.children), props);
-	}
+			// Reuse the child provided
+			// This makes it flexible to use whatever element is wanted (div, ul, etc)
+			return React.cloneElement(React.Children.only(this.props.children), props);
+		}
 }
 
 

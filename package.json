@@ -1,20 +1,22 @@
 {
-  "name": "react-hammerjs",
-  "version": "0.5.0",
+  "name": "rc-hammerjs",
+  "version": "0.6.0",
   "description": "ReactJS / HammerJS integration. Support touch events in your React app.",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
+  "module": "./es/index.js",
   "author": "Jed Watson",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JedWatson/react-hammerjs.git"
+    "url": "https://github.com/react-component/react-hammerjs"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
     "hammerjs": "^2.0.8"
   },
   "files": [
-    "lib"
+    "lib",
+    "es"
   ],
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",

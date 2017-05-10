@@ -2,7 +2,7 @@
 logs
 *.log
 *.log.*
-.DS_store
+
 
 # Runtime data
 pids
@@ -15,5 +15,10 @@ coverage
 
 # Dependency directory
 node_modules
-dist
+
+
 lib
+dist
+es
+.DS_Store
+
