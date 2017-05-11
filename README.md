@@ -56,7 +56,7 @@ The `options` property can be used to configure the Hammer manager. These proper
 ### Example
 
 ```
-var Hammer = require('react-hammerjs');
+var Hammer = require('rc-hammerjs');
 
 // Default options
 <Hammer onTap={handleTap} onSwipe={handleSwipe}><div>Tap Me</div></Hammer>
