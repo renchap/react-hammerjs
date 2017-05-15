@@ -70,6 +70,9 @@ function updateHammer (hammer, props) {
 				Object.keys(props.options.recognizers).forEach(gesture => {
 					const recognizer = hammer.get(gesture);
 					recognizer.set(props.options.recognizers[gesture]);
+ 					if (props.options.recognizers[gesture].requireFailure) {
+						recognizer.requireFailure(props.options.recognizers[gesture].requireFailure);
+					}
 				}, this);
 			} else {
 				const key = option;
