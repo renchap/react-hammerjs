@@ -107,7 +107,7 @@ export default class HammerComponent extends React.Component {
 		};
 
     componentDidMount() {
-			this.hammer = new Hammer(ReactDOM.findDOMNode(this));
+			this.hammer = new Hammer(this.domElement);
 			updateHammer(this.hammer, this.props);
 		}
 
@@ -126,13 +126,20 @@ export default class HammerComponent extends React.Component {
 		}
 
     render() {
-			var props = {};
+			const props = {};
 
-			Object.keys(this.props).forEach(function (i) {
+			props.ref = (domElement) => {
+				if (this.props.ref) {
+					this.props.ref(domElement);
+				}
+				this.domElement = domElement;
+			};
+
+			Object.keys(this.props).forEach(i => {
 				if (!privateProps[i]) {
 					props[i] = this.props[i];
 				}
-			}, this);
+			});
 
 			// Reuse the child provided
 			// This makes it flexible to use whatever element is wanted (div, ul, etc)
